@@ -8,6 +8,7 @@ django = "*"
 requests = "*"
 django-celery-beat = "==2.5"
 redis = "==4.5"
+environs = "*"
 
 [dev-packages]
 
