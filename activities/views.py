@@ -1,3 +1,8 @@
 from django.shortcuts import render
+from .models import Activity
 
-# Create your views here.
+
+def index(request):
+    activity = Activity.objects.first()
+    context = {'activity': activity}
+    return render(request, 'activities/activity.html', context)
