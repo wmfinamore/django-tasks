@@ -15,4 +15,9 @@ app.config_from_object('django.conf::settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 # Tasks will be named, and configured here
-app.conf.beat_schedule = {}
+app.conf.beat_schedule = {
+    'update-activity-every-30-seconds': {
+        'task': 'activities.tasks.update_activity',
+        'schedule': timedelta(seconds=30)
+    }
+}
