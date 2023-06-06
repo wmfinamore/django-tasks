@@ -3,7 +3,6 @@ from celery import shared_task
 from celery.utils.log import get_task_logger
 from .models import Activity
 
-
 logger = get_task_logger(__name__)
 
 
@@ -13,18 +12,22 @@ def update_activity():
     activity = Activity.objects.first()
 
     # Get the activity from the Bored API
-    response = requests.get('http://www.boreapi.com/api/activity/')
-    data = response.json()
+    try:
+        response = requests.get('http://www.boreapi.com/api/activity/')
+        data = response.json()
+        # Update the activity
+        activity.activity = data['activity']
+        activity.type = data['type']
+        activity.participants = data['participants']
+        activity.price = data['price']
+        activity.link = data['link']
 
-    # Update the activity
-    activity.activity = data['activity']
-    activity.type = data['type']
-    activity.participants = data['participants']
-    activity.price = data['price']
-    activity.link = data['link']
+        # Save the activity
+        activity.save()
 
-    # Save the activity
-    activity.save()
+        # Log that the activity was updated
+        logger.info('Activity updated')
+    except Exception as err:
+        print(f'Api indisponível {err=}, {type(err)} :(')
 
-    # Log that the activity was updated
-    logger.info('Activity updated')
+
